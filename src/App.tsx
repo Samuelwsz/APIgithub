@@ -1,33 +1,37 @@
-import { useState } from 'react'
-import reactLogo from './assets/react.svg'
-import viteLogo from '/vite.svg'
-import './App.css'
+import { useEffect, useState } from "react"
+import "./global.css"
+import axios from "axios"
+
+interface RepositoryProps {
+  full_name: string
+  description: string
+}
 
 function App() {
-  const [count, setCount] = useState(0)
+  const [repositories, setRepositories] = useState<RepositoryProps[]>([])
+
+  useEffect(() => {
+    axios
+      .get("https://api.github.com/users/samuelwsz/repos")
+      .then((response) => {
+        setRepositories(response.data)
+      })
+  }, [])
 
   return (
     <>
       <div>
-        <a href="https://vitejs.dev" target="_blank">
-          <img src={viteLogo} className="logo" alt="Vite logo" />
-        </a>
-        <a href="https://react.dev" target="_blank">
-          <img src={reactLogo} className="logo react" alt="React logo" />
-        </a>
+        <ul>
+          {repositories.map((repo) => {
+            return (
+              <li key={repo.full_name}>
+                <strong>{repo.full_name}</strong>
+                <p>{repo.description}</p>
+              </li>
+            )
+          })}
+        </ul>
       </div>
-      <h1>Vite + React</h1>
-      <div className="card">
-        <button onClick={() => setCount((count) => count + 1)}>
-          count is {count}
-        </button>
-        <p>
-          Edit <code>src/App.tsx</code> and save to test HMR
-        </p>
-      </div>
-      <p className="read-the-docs">
-        Click on the Vite and React logos to learn more
-      </p>
     </>
   )
 }
