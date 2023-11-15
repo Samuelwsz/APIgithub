@@ -1,6 +1,5 @@
-import { useEffect, useState } from "react"
 import "./global.css"
-import axios from "axios"
+import { useAPI } from "./hooks/useAPI"
 
 interface RepositoryProps {
   full_name: string
@@ -8,21 +7,16 @@ interface RepositoryProps {
 }
 
 function App() {
-  const [repositories, setRepositories] = useState<RepositoryProps[]>([])
-
-  useEffect(() => {
-    axios
-      .get("https://api.github.com/users/samuelwsz/repos")
-      .then((response) => {
-        setRepositories(response.data)
-      })
-  }, [])
+  const { data: repositories, isFetching } = useAPI<RepositoryProps[]>(
+    "/users/samuelwsz/repos"
+  )
 
   return (
     <>
       <div>
         <ul>
-          {repositories.map((repo) => {
+          {isFetching && <p>Carregando...</p>}
+          {repositories?.map((repo) => {
             return (
               <li key={repo.full_name}>
                 <strong>{repo.full_name}</strong>
