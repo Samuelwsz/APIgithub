@@ -5,7 +5,7 @@ import { Link } from "react-router-dom"
 
 import { useQuery } from "react-query"
 
-interface RepositoryProps {
+export interface RepositoryProps {
   full_name: string
   description: string
 }
@@ -25,7 +25,7 @@ function Repos() {
       return response.data
     },
     {
-      refetchOnWindowFocus: false,
+      staleTime: 1000 * 60,
     }
   )
 
